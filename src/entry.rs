@@ -1,9 +1,10 @@
 // mod status;
 
 use crate::Date;
-// use status::Status;
 use crate::Status;
+use colored::*;
 use serde::{Deserialize, Serialize};
+use std::fmt;
 
 #[derive(Debug)]
 pub enum SortType {
@@ -49,6 +50,38 @@ impl Entry {
             cost,
         }
     }
+
+    pub fn get_name(&self) -> &String {
+        &self.name
+    }
+
+    pub fn get_description(&self) -> &String {
+        &self.description
+    }
+
+    pub fn get_date_added(&self) -> &Date {
+        &self.date_added
+    }
+
+    pub fn get_due_date(&self) -> &Date {
+        &self.due_date
+    }
+
+    pub fn get_category(&self) -> &String {
+        &self.category
+    }
+
+    pub fn get_status(&self) -> &Status {
+        &self.status
+    }
+
+    pub fn get_priority(&self) -> &i32 {
+        &self.priority
+    }
+
+    pub fn get_cost(&self) -> &f32 {
+        &self.cost
+    }
 }
 
 pub fn sort_by_name(arr: &mut Vec<Entry>) {
@@ -88,5 +121,33 @@ pub fn sort(arr: &mut Vec<Entry>, sort_type: SortType) {
         SortType::Status => sort_by_status(arr),
         SortType::Priority => sort_by_priority(arr),
         SortType::Cost => sort_by_cost(arr),
+    }
+}
+
+impl fmt::Display for Entry {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let colored_due_date = if self.due_date < Date::now() {
+            self.due_date.to_string().dimmed()
+        } else if self.due_date < Date::now().add_days(7) {
+            self.due_date.to_string().red()
+        } else if self.due_date < Date::now().add_days(14) {
+            self.due_date.to_string().bright_red()
+        } else if self.due_date < Date::now().add_days(28) {
+            self.due_date.to_string().yellow()
+        } else {
+            self.due_date.to_string().normal()
+        };
+
+        let colored_status = match self.status {
+            Status::Done => "Done".bright_green(),
+            Status::InProgress => "In Progress".bright_cyan(),
+            Status::NotStarted => "Not Started".normal(),
+        };
+
+        write!(
+            f,
+            "{} | {} | {} | {}",
+            self.name, self.category, colored_due_date, colored_status
+        )
     }
 }
