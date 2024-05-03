@@ -67,7 +67,7 @@ fn main() {
             "desc 2".to_string(),
             Date::new(2024, 10, 8).unwrap(),
             "category 2".to_string(),
-            Status::Pending,
+            Status::InProgress,
             1,
             1.0,
         ),
