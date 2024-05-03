@@ -1,4 +1,6 @@
+use crate::colors::{DUE_FOUR_WEEKS, DUE_ONE_WEEK, DUE_THREE_DAYS, DUE_TWO_WEEKS, PAST_DUE_COLOR};
 use chrono::{Datelike, Local};
+use colored::{ColoredString, Colorize};
 use serde::{Deserialize, Serialize};
 use std::cmp::Ordering;
 use std::fmt;
@@ -136,6 +138,23 @@ impl Date {
         }
 
         return new_date;
+    }
+
+    pub fn to_colored_string(&self) -> ColoredString {
+        let today = Date::now();
+        if *self < today {
+            return self.to_string().custom_color(PAST_DUE_COLOR);
+        } else if *self <= today.add_days(3) {
+            return self.to_string().custom_color(DUE_THREE_DAYS);
+        } else if *self <= today.add_days(7) {
+            return self.to_string().custom_color(DUE_ONE_WEEK);
+        } else if *self <= today.add_days(14) {
+            return self.to_string().custom_color(DUE_TWO_WEEKS);
+        } else if *self <= today.add_days(28) {
+            return self.to_string().custom_color(DUE_FOUR_WEEKS);
+        } else {
+            return self.to_string().normal();
+        };
     }
 }
 

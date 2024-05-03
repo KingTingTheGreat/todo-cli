@@ -1,8 +1,5 @@
-// mod status;
-
 use crate::Date;
 use crate::Status;
-use colored::*;
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
@@ -126,28 +123,13 @@ pub fn sort(arr: &mut Vec<Entry>, sort_type: SortType) {
 
 impl fmt::Display for Entry {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let colored_due_date = if self.due_date < Date::now() {
-            self.due_date.to_string().dimmed()
-        } else if self.due_date < Date::now().add_days(7) {
-            self.due_date.to_string().red()
-        } else if self.due_date < Date::now().add_days(14) {
-            self.due_date.to_string().bright_red()
-        } else if self.due_date < Date::now().add_days(28) {
-            self.due_date.to_string().yellow()
-        } else {
-            self.due_date.to_string().normal()
-        };
-
-        let colored_status = match self.status {
-            Status::Done => "Done".bright_green(),
-            Status::InProgress => "In Progress".bright_cyan(),
-            Status::NotStarted => "Not Started".normal(),
-        };
-
         write!(
             f,
             "{} | {} | {} | {}",
-            self.name, self.category, colored_due_date, colored_status
+            self.name,
+            self.category,
+            self.due_date.to_colored_string(),
+            self.status.to_colored_string()
         )
     }
 }

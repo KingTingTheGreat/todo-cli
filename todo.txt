@@ -1,0 +1,13 @@
+colors: 
+    Done: bright green
+    InProgress: blue
+    NotStarted: gray
+
+    name: white/default or custom
+    description: white/default
+    date_added: white/default
+    due_date: less than 1 week: red, less than 2 weeks: orange, less than 4 weeks: yellow, otherwise white/default
+    category: white/default
+    status: status color
+    priority: white/default or custom
+    cost: dark green

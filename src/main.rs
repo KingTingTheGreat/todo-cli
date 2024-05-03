@@ -1,8 +1,10 @@
+mod colors;
 mod date;
 mod entry;
 mod status;
 
 use date::Date;
+use entry::SortType::*;
 use entry::*;
 use status::Status;
 // use std::io;
@@ -85,30 +87,32 @@ fn main() {
     }
 
     // sort by due date
-    sort_by_due_date(&mut entries);
+    sort(&mut entries, DueDate);
     println!("\nSorted by due date:");
     for entry in entries.iter() {
         println!("{}", entry);
     }
 
-    // sort by name
-    sort_by_name(&mut entries);
-    println!("\nSorted by name:");
-    for entry in entries.iter() {
-        println!("{}", entry);
-    }
+    // // sort by name
+    // sort(&mut entries, Name);
+    // println!("\nSorted by name:");
+    // for entry in entries.iter() {
+    //     println!("{}", entry);
+    // }
 
-    // sort by status
-    sort_by_status(&mut entries);
-    println!("\nSorted by status:");
-    for entry in entries.iter() {
-        println!("{}", entry);
-    }
+    // // sort by status
+    // sort(&mut entries, Status);
+    // println!("\nSorted by status:");
+    // for entry in entries.iter() {
+    //     println!("{}", entry);
+    // }
 
-    // sort by category
-    sort_by_category(&mut entries);
-    println!("\nSorted by category:");
-    for entry in entries.iter() {
-        println!("{}", entry);
-    }
+    // // sort by category
+    // sort(&mut entries, Category);
+    // println!("\nSorted by category:");
+    // for entry in entries.iter() {
+    //     println!("{}", entry);
+    // }
+
+    println!("done!");
 }
