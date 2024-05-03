@@ -20,7 +20,7 @@ fn is_leap(year: u16) -> bool {
     return year % 400 == 0;
 }
 
-fn num_days(year: u16, month: u8) -> u8 {
+fn get_num_days(year: u16, month: u8) -> u8 {
     let month_days: [u8; 12] = [
         31,
         if is_leap(year) { 29 } else { 28 },
@@ -38,7 +38,25 @@ fn num_days(year: u16, month: u8) -> u8 {
 
     return month_days[month as usize - 1];
 }
-const MONTH_DAYS: [u8; 12] = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+fn get_month_name(month: u8) -> String {
+    let month_names = [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December",
+    ];
+    return month_names[month as usize - 1].to_string();
+}
+
 impl Date {
     pub fn new(year: u16, month: u8, day: u8) -> Result<Date, String> {
         if year < 1 {
@@ -47,7 +65,7 @@ impl Date {
             return Err("Invalid month. Must be greater than 0 and less than 12.".to_string());
         }
 
-        let max_days = num_days(year, month);
+        let max_days = get_num_days(year, month);
         if day < 1 || day > max_days {
             return Err("Invalid day. Must be greater than 0 and less than {max_days}".to_string());
         }
@@ -101,7 +119,7 @@ impl Date {
         let mut days_left = days;
 
         while days_left > 0 {
-            let diff = num_days(new_date.year, new_date.month) - new_date.day;
+            let diff = get_num_days(new_date.year, new_date.month) - new_date.day;
             if days_left <= diff as u16 {
                 new_date.day += days_left as u8;
                 days_left = 0;
@@ -149,23 +167,7 @@ impl Ord for Date {
 
 impl fmt::Display for Date {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        // Array of month names
-        let month_names = [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
-            "August",
-            "September",
-            "October",
-            "November",
-            "December",
-        ];
-        // Subtract 1 from month to get the index in the month_names array
-        let month_name = month_names[self.month as usize - 1];
+        let month_name = get_month_name(self.month);
 
         write!(f, "{} {}, {}", month_name, self.day, self.year)
     }
