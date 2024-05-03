@@ -1,0 +1,10 @@
+[package]
+name = "todo-cli"
+version = "0.1.0"
+edition = "2021"
+authors = ["Jeffrey Ting <jting@bu.edu>"]
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+colored = "2.0"
+chrono = "0.4"
