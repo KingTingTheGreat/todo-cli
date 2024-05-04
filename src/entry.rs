@@ -1,5 +1,6 @@
 use crate::Date;
 use crate::Status;
+use colored::{ColoredString, Colorize};
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
@@ -89,6 +90,20 @@ impl Entry {
             PRIORITY => self.priority.to_string(),
             COST => self.cost.to_string(),
             _ => String::new(),
+        }
+    }
+
+    pub fn get_colored_attr(&self, attr: &str) -> ColoredString {
+        match attr {
+            NAME => self.name.clone().normal(),
+            DESCRIPTION => self.description.clone().normal(),
+            DATE_ADDED => self.date_added.to_string().normal(),
+            DUE_DATE => self.due_date.to_colored_string(),
+            CATEGORY => self.category.clone().normal(),
+            STATUS => self.status.to_colored_string(),
+            PRIORITY => self.priority.to_string().normal(),
+            COST => self.cost.to_string().normal(),
+            _ => String::new().normal(),
         }
     }
 }
