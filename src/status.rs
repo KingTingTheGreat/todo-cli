@@ -11,11 +11,18 @@ pub enum Status {
 }
 
 impl Status {
+    pub fn to_string(&self) -> String {
+        match self {
+            Status::Done => "Done".to_string(),
+            Status::InProgress => "In Progress".to_string(),
+            Status::NotStarted => "Not Started".to_string(),
+        }
+    }
     pub fn to_colored_string(&self) -> ColoredString {
         match self {
-            Status::Done => "Done".to_string().custom_color(DONE_COLOR),
-            Status::InProgress => "In Progress".to_string().custom_color(IN_PROGRESS_COLOR),
-            Status::NotStarted => "Not Started".to_string().normal(),
+            Status::Done => self.to_string().custom_color(DONE_COLOR),
+            Status::InProgress => self.to_string().custom_color(IN_PROGRESS_COLOR),
+            Status::NotStarted => self.to_string().normal(),
         }
     }
 }
