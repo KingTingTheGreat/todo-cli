@@ -1,4 +1,4 @@
-use crate::Entry;
+use crate::entry::*;
 use serde::{Deserialize, Serialize};
 use std::cmp::max;
 use std::fs::OpenOptions;
@@ -155,18 +155,21 @@ impl TodoList {
             maximums.push(max(max_len, attr.len()));
         }
 
-        let mut header = String::new();
-        let mut separator = String::new();
+        let max_id_len = max(num_length(self.entries.len() + 1), ID.len());
+        let mut header = format!("| {:^max_id_len$} | ", ID);
+        let mut separator = format!("+-{:-<max_id_len$}+-", "", max_id_len = max_id_len + 1);
         for (i, attr) in attrs.iter().enumerate() {
-            header.push_str(&format!("{:<max_len$} | ", attr, max_len = maximums[i]));
+            header.push_str(&format!("{:^max_len$} | ", attr, max_len = maximums[i]));
             separator.push_str(&format!("{:-<max_len$}+-", "", max_len = maximums[i] + 1));
         }
         header.pop();
         separator.pop();
+
+        println!("{}", separator);
         println!("{}", header);
         println!("{}", separator);
         for (i, entry) in self.entries.iter().enumerate() {
-            let mut line = String::new();
+            let mut line = format!("| {:<max_id_len$} | ", i + 1, max_id_len = max_id_len);
             for (j, attr) in attrs.iter().enumerate() {
                 line.push_str(&format!(
                     "{:<max_len$} | ",
@@ -174,9 +177,18 @@ impl TodoList {
                     max_len = maximums[j],
                 ));
             }
-            line.push_str(&format!("{}", i));
             println!("{}", line);
         }
         println!("{}", separator);
     }
+}
+
+fn num_length(num: usize) -> usize {
+    let mut n = num;
+    let mut len = 0;
+    while n > 0 {
+        n /= 10;
+        len += 1;
+    }
+    len
 }

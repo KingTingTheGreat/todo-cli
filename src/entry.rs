@@ -4,14 +4,16 @@ use colored::{ColoredString, Colorize};
 use serde::{Deserialize, Serialize};
 use std::fmt;
 
-pub const NAME: &str = "name";
-pub const DESCRIPTION: &str = "description";
-pub const DATE_ADDED: &str = "date_added";
-pub const DUE_DATE: &str = "due_date";
-pub const CATEGORY: &str = "category";
-pub const STATUS: &str = "status";
-pub const PRIORITY: &str = "priority";
-pub const COST: &str = "cost";
+// ID is not an Entry attribute, but it is used to identify an Entry in the TodoList
+pub const ID: &str = "ID";
+pub const NAME: &str = "Name";
+pub const DESCRIPTION: &str = "Description";
+pub const DATE_ADDED: &str = "Date Added";
+pub const DUE_DATE: &str = "Due Date";
+pub const CATEGORY: &str = "Category";
+pub const STATUS: &str = "Status";
+pub const PRIORITY: &str = "Priority";
+pub const COST: &str = "Cost";
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Entry {
