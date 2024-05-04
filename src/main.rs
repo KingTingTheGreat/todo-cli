@@ -2,26 +2,28 @@ mod colors;
 mod date;
 mod entry;
 mod status;
+mod todo_list;
 
 use date::Date;
-use entry::SortType::*;
 use entry::*;
 use status::Status;
-// use std::io;
+use todo_list::TodoList;
+
+const ENTRIES_FILENAME: &str = "todo-entries.json";
+
+fn init_saved() -> TodoList {
+    let todo_list = TodoList::from_file(ENTRIES_FILENAME);
+    return todo_list;
+}
+
+fn persist(todo_list: &TodoList) {
+    todo_list.to_file(ENTRIES_FILENAME);
+}
 
 fn main() {
-    let my_entry = Entry::new(
-        "Discussion Board".to_string(),
-        "last discussion board post".to_string(),
-        // Date::new(2024, 5, 5).unwrap(),
-        Date::now(),
-        "PH300".to_string(),
-        Status::Done,
-        1,
-        0.0,
-    );
+    let today = Date::now();
 
-    let one_week = my_entry.get_due_date().add_days(7);
+    let one_week = today.add_days(7);
     let entry1 = Entry::new(
         "Final Paper".to_string(),
         "final paper".to_string(),
@@ -33,7 +35,7 @@ fn main() {
         0.0,
     );
 
-    let two_weeks = my_entry.get_due_date().add_days(14);
+    let two_weeks = today.add_days(14);
     let entry2 = Entry::new(
         "Final Paper".to_string(),
         "last discussion board post".to_string(),
@@ -45,7 +47,7 @@ fn main() {
         0.0,
     );
 
-    let four_weeks = my_entry.get_due_date().add_days(28);
+    let four_weeks = today.add_days(28);
     let entry3 = Entry::new(
         "Final Exam".to_string(),
         "last discussion board post".to_string(),
@@ -57,7 +59,7 @@ fn main() {
         0.0,
     );
 
-    let one_month = my_entry.get_due_date().add_days(30);
+    let one_month = today.add_days(30);
     let entry4 = Entry::new(
         "Onboarding".to_string(),
         "last discussion board ".to_string(),
@@ -80,39 +82,19 @@ fn main() {
         0.0,
     );
 
+    let mut todo_list = init_saved();
+
+    todo_list.clear();
+
+    todo_list.add_entries(vec![entry1, entry2, entry3, entry4, entry_past]);
+
     // print all entries
-    let mut entries = vec![my_entry, entry4, entry1, entry2, entry3, entry_past];
-    for entry in entries.iter() {
-        println!("{}", entry);
-    }
+    todo_list.print_entries(&[NAME, CATEGORY, DUE_DATE, STATUS]);
 
     // sort by due date
-    sort(&mut entries, DueDate);
+    todo_list.sort_by_due_date();
     println!("\nSorted by due date:");
-    for entry in entries.iter() {
-        println!("{}", entry);
-    }
+    todo_list.print_entries(&[NAME, CATEGORY, DUE_DATE, STATUS]);
 
-    // // sort by name
-    // sort(&mut entries, Name);
-    // println!("\nSorted by name:");
-    // for entry in entries.iter() {
-    //     println!("{}", entry);
-    // }
-
-    // // sort by status
-    // sort(&mut entries, Status);
-    // println!("\nSorted by status:");
-    // for entry in entries.iter() {
-    //     println!("{}", entry);
-    // }
-
-    // // sort by category
-    // sort(&mut entries, Category);
-    // println!("\nSorted by category:");
-    // for entry in entries.iter() {
-    //     println!("{}", entry);
-    // }
-
-    println!("done!");
+    persist(&todo_list);
 }
