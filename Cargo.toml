@@ -8,3 +8,4 @@ authors = ["Jeffrey Ting <jting@bu.edu>"]
 serde = { version = "1.0", features = ["derive"] }
 colored = "2.0"
 chrono = "0.4"
+serde_json = "1.0"
