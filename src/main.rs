@@ -73,7 +73,7 @@ fn main() {
 
     let entry_past = Entry::new(
         "OSN".to_string(),
-        "last discussion board post".to_string(),
+        "last discussion board post and a really long decription".to_string(),
         // Date::new(2024, 5, 5).unwrap(),
         Date::new(2020, 5, 5).unwrap(),
         "Cargill".to_string(),
@@ -82,19 +82,31 @@ fn main() {
         0.0,
     );
 
+    let three_weeks = today.add_days(21);
+    let entry5 = Entry::new(
+        "rida".to_string(),
+        "=^-^=".to_string(),
+        // Date::new(2024, 5, 5).unwrap(),
+        three_weeks,
+        "CAT".to_string(),
+        Status::Done,
+        1,
+        0.0,
+    );
+
     let mut todo_list = init_saved();
 
     todo_list.clear();
 
-    todo_list.add_entries(vec![entry1, entry2, entry3, entry4, entry_past]);
+    todo_list.add_entries(vec![entry1, entry2, entry3, entry4, entry_past, entry5]);
 
     // print all entries
-    todo_list.print_entries(&[NAME, CATEGORY, DUE_DATE, STATUS]);
+    todo_list.print_entries(&[NAME, CATEGORY, DUE_DATE, STATUS, DESCRIPTION]);
 
     // sort by due date
     todo_list.sort_by_due_date();
     println!("\nSorted by due date:");
-    todo_list.print_entries(&[NAME, CATEGORY, DUE_DATE, STATUS]);
+    todo_list.print_entries(&[NAME, CATEGORY, DUE_DATE, STATUS, DESCRIPTION]);
 
     persist(&todo_list);
 }
