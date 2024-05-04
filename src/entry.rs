@@ -12,8 +12,6 @@ pub const DATE_ADDED: &str = "Date Added";
 pub const DUE_DATE: &str = "Due Date";
 pub const CATEGORY: &str = "Category";
 pub const STATUS: &str = "Status";
-pub const PRIORITY: &str = "Priority";
-pub const COST: &str = "Cost";
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Entry {
@@ -23,8 +21,6 @@ pub struct Entry {
     due_date: Date,
     category: String,
     status: Status,
-    priority: i32,
-    cost: f32,
 }
 
 impl Entry {
@@ -34,8 +30,6 @@ impl Entry {
         due_date: Date,
         category: String,
         status: Status,
-        priority: i32,
-        cost: f32,
     ) -> Entry {
         Entry {
             name,
@@ -44,8 +38,6 @@ impl Entry {
             due_date,
             category,
             status,
-            priority,
-            cost,
         }
     }
 
@@ -73,14 +65,6 @@ impl Entry {
         &self.status
     }
 
-    pub fn get_priority(&self) -> &i32 {
-        &self.priority
-    }
-
-    pub fn get_cost(&self) -> &f32 {
-        &self.cost
-    }
-
     pub fn get_attr(&self, attr: &str) -> String {
         match attr {
             NAME => self.name.clone(),
@@ -89,8 +73,6 @@ impl Entry {
             DUE_DATE => self.due_date.to_string(),
             CATEGORY => self.category.clone(),
             STATUS => self.status.to_string(),
-            PRIORITY => self.priority.to_string(),
-            COST => self.cost.to_string(),
             _ => String::new(),
         }
     }
@@ -103,8 +85,6 @@ impl Entry {
             DUE_DATE => self.due_date.to_colored_string(),
             CATEGORY => self.category.clone().normal(),
             STATUS => self.status.to_colored_string(),
-            PRIORITY => self.priority.to_string().normal(),
-            COST => self.cost.to_string().normal(),
             _ => String::new().normal(),
         }
     }

@@ -10,8 +10,6 @@ pub enum SortType {
     DueDate,
     Category,
     Status,
-    Priority,
-    Cost,
 }
 
 #[derive(Serialize, Deserialize, Debug, Default)]
@@ -113,16 +111,6 @@ impl TodoList {
             .sort_by(|a, b| a.get_status().cmp(&b.get_status()));
     }
 
-    pub fn sort_by_priority(&mut self) {
-        self.entries
-            .sort_by(|a, b| a.get_priority().cmp(&b.get_priority()));
-    }
-
-    pub fn sort_by_cost(&mut self) {
-        self.entries
-            .sort_by(|a, b| a.get_cost().partial_cmp(&b.get_cost()).unwrap());
-    }
-
     pub fn sort(&mut self, sort_type: SortType) {
         match sort_type {
             SortType::Name => self.sort_by_name(),
@@ -130,8 +118,6 @@ impl TodoList {
             SortType::DueDate => self.sort_by_due_date(),
             SortType::Category => self.sort_by_category(),
             SortType::Status => self.sort_by_status(),
-            SortType::Priority => self.sort_by_priority(),
-            SortType::Cost => self.sort_by_cost(),
         }
     }
 
