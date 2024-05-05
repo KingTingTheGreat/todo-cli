@@ -11,6 +11,18 @@ pub enum Status {
 }
 
 impl Status {
+    pub fn from_string(status: &str) -> Status {
+        let lower_status = status.to_lowercase();
+        let trim_status = lower_status.trim();
+        if ["done"].contains(&trim_status) {
+            return Status::Done;
+        } else if ["in progress", "in-progress"].contains(&trim_status) {
+            return Status::InProgress;
+        } else if ["no started", "not-started"].contains(&trim_status) {
+            return Status::NotStarted;
+        }
+        panic!("Invalid status")
+    }
     pub fn to_string(&self) -> String {
         match self {
             Status::Done => "Done".to_string(),
