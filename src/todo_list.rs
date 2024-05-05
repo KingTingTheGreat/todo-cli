@@ -1,8 +1,10 @@
 use crate::entry::*;
+use dirs::home_dir;
 use serde::{Deserialize, Serialize};
 use std::cmp::max;
 use std::io::Read;
 use std::fs::OpenOptions;
+use std::path::PathBuf;
 
 #[derive(Debug)]
 pub enum SortType {
@@ -35,12 +37,24 @@ impl TodoList {
         TodoList { entries }
     }
 
+    fn get_pathbuf(file_name: &str) -> PathBuf {
+        let mut file_path: PathBuf = PathBuf::new();
+        if file_name.starts_with("~/") {
+            file_path = home_dir().unwrap();
+            file_path.push(file_name.strip_prefix("~/").unwrap());
+        } else {
+            file_path.push(file_name)
+        }
+        return file_path;
+    }
+
     pub fn from_file(file_name: &str) -> TodoList {
+        let file_pathbuf = Self::get_pathbuf(file_name);
         let file = OpenOptions::new()
             .read(true)
             .write(true)
             .create(true) // Create the file if it doesn't exist
-            .open(file_name)
+            .open(file_pathbuf)
             .expect("Failed to open file");
         let mut reader = std::io::BufReader::new(file);
         let mut content = String::new();
@@ -60,7 +74,8 @@ impl TodoList {
     }
 
     pub fn to_file(&self, file_name: &str) {
-        let file = std::fs::File::create(file_name).expect("Failed to create file");
+        let file_pathbuf = Self::get_pathbuf(file_name);
+        let file = std::fs::File::create(file_pathbuf).expect("Failed to create file");
         let writer = std::io::BufWriter::new(file);
         serde_json::to_writer(writer, &self.entries).expect("Failed to write to file");
     }

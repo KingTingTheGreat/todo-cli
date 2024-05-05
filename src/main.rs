@@ -4,12 +4,13 @@ mod entry;
 mod status;
 mod todo_list;
 
+use clap::Parser;
 use date::Date;
 use entry::*;
 use status::Status;
 use todo_list::TodoList;
 
-const ENTRIES_FILENAME: &str = "todo-entries.json";
+const ENTRIES_FILENAME: &str = "~/todo-entries.json";
 
 fn init_saved() -> TodoList {
     let todo_list = TodoList::from_file(ENTRIES_FILENAME);
@@ -20,93 +21,109 @@ fn persist(todo_list: &TodoList) {
     todo_list.to_file(ENTRIES_FILENAME);
 }
 
+// #[derive(Parser, Default, Debug)]
+// struct Arguments {
+//     #[clap(short, long, default_value_t = false)]
+//     /// if areas.csv to download
+//     areas: bool,
+//     #[clap(short, long, default_value_t = false)]
+//     /// if markers.csv to download
+//     markers: bool,
+//     #[clap(short, long, default_value_t = false)]
+//     /// if tracks.csv to download
+//     tracks: bool,
+//     #[clap(short, long)]
+//     #[arg(short, long, default_value_t = 1)]
+//     count: u8,
+//     /// path to file of GPS tracks to download
+//     gpx_list_file: Option<String>,
+// }
+
+#[derive(Parser, Debug)]
+enum SubCommand {
+    Add(Add),
+    Update(Update),
+    Remove(Remove),
+}
+
+#[derive(Parser, Debug)]
+struct Add {
+    name: String,
+    description: String,
+    due_date: String,
+    category: String,
+    status: String,
+}
+
+#[derive(Parser, Debug)]
+struct Update {
+    id: i32,
+    name: Option<String>,
+    description: Option<String>,
+    due_date: Option<String>,
+    category: Option<String>,
+    status: Option<String>,
+}
+
+#[derive(Parser, Debug)]
+struct Remove {
+    id: usize,
+}
+
+// #[derive(Parser)]
+// struct Find {
+//     pattern: String,
+// }
+
+#[derive(Parser, Default, Debug)]
+struct Args {
+    #[clap(subcommand)]
+    subcmd: Option<SubCommand>,
+}
+
 fn main() {
-    let today = Date::now();
-
-    let one_week = today.add_days(7);
-    let entry1 = Entry::new(
-        "Final Paper".to_string(),
-        "final paper".to_string(),
-        // Date::new(2024, 5, 5).unwrap(),
-        one_week,
-        "PH300".to_string(),
-        Status::InProgress,
-        1,
-        0.0,
-    );
-
-    let two_weeks = today.add_days(14);
-    let entry2 = Entry::new(
-        "Final Paper".to_string(),
-        "last discussion board post".to_string(),
-        // Date::new(2024, 5, 5).unwrap(),
-        two_weeks,
-        "WS335".to_string(),
-        Status::InProgress,
-        1,
-        0.0,
-    );
-
-    let four_weeks = today.add_days(28);
-    let entry3 = Entry::new(
-        "Final Exam".to_string(),
-        "last discussion board post".to_string(),
-        // Date::new(2024, 5, 5).unwrap(),
-        four_weeks,
-        "CS350".to_string(),
-        Status::InProgress,
-        1,
-        0.0,
-    );
-
-    let one_month = today.add_days(30);
-    let entry4 = Entry::new(
-        "Onboarding".to_string(),
-        "last discussion board ".to_string(),
-        // Date::new(2024, 5, 5).unwrap(),
-        one_month,
-        "Cargill".to_string(),
-        Status::NotStarted,
-        1,
-        0.0,
-    );
-
-    let entry_past = Entry::new(
-        "OSN".to_string(),
-        "last discussion board post and a really long decription".to_string(),
-        // Date::new(2024, 5, 5).unwrap(),
-        Date::new(2020, 5, 5).unwrap(),
-        "Cargill".to_string(),
-        Status::NotStarted,
-        1,
-        0.0,
-    );
-
-    let three_weeks = today.add_days(21);
-    let entry5 = Entry::new(
-        "rida".to_string(),
-        "=^-^=".to_string(),
-        // Date::new(2024, 5, 5).unwrap(),
-        three_weeks,
-        "CAT".to_string(),
-        Status::Done,
-        1,
-        0.0,
-    );
-
     let mut todo_list = init_saved();
 
-    todo_list.clear();
+    let args = Args::parse();
+    match args.subcmd {
+        Some(SubCommand::Add(add)) => {
+            let due_date = Date::now().add_days(7);
+            let status = Status::from_string(&add.status);
+            let entry = Entry::new(add.name, add.description, due_date, add.category, status);
+            todo_list.add_entry(entry);
+        }
+        // Some(SubCommand::Update(update)) => {
+        //     let mut entry = todo_list.get_entry(update.id);
+        //     if let Some(name) = update.name {
+        //         entry.set_name(name);
+        //     }
+        //     if let Some(description) = update.description {
+        //         entry.set_description(description);
+        //     }
+        //     if let Some(due_date) = update.due_date {
+        //         entry.set_due_date(Date::from_string(&due_date));
+        //     }
+        //     if let Some(category) = update.category {
+        //         entry.set_category(category);
+        //     }
+        //     if let Some(status) = update.status {
+        //         entry.set_status(Status::from_string(&status));
+        //     }
+        // }
+        Some(SubCommand::Remove(remove)) => {
+            todo_list.remove_entry(remove.id);
+        }
+        None => {
+            todo_list.print_entries(&[NAME, CATEGORY, DUE_DATE, STATUS, DESCRIPTION]);
+        }
+        _ => {}
+    }
 
-    todo_list.add_entries(vec![entry1, entry2, entry3, entry4, entry_past, entry5]);
+    // let args = Cli::parse();
+    // println!("Pattern: {}", args.pattern);
+    // println!("Path: {:?}", args.path);
 
-    // print all entries
-    todo_list.print_entries(&[NAME, CATEGORY, DUE_DATE, STATUS, DESCRIPTION]);
-
-    // sort by due date
-    todo_list.sort_by_due_date();
-    println!("\nSorted by due date:");
-    todo_list.print_entries(&[NAME, CATEGORY, DUE_DATE, STATUS, DESCRIPTION]);
+    // let args = Find::parse();
 
     persist(&todo_list);
 }
