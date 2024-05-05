@@ -151,6 +151,10 @@ impl TodoList {
         }
     }
 
+    pub fn reverse(& mut self) {
+        self.entries.reverse();
+    }
+
     pub fn print_entries(&self, attrs: &[&str]) {
         if self.entries.is_empty() {
             println!("Nothing to do...");

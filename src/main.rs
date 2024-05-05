@@ -46,6 +46,7 @@ enum SubCommand {
     Update(Update),
     Remove(Remove),
     Sort(Sort),
+    Reverse,
 }
 
 #[derive(Parser, Debug)]
@@ -136,6 +137,9 @@ fn main() {
             } else {
                 println!("Invalid sort type")
             }
+        }
+        Some(SubCommand::Reverse) => {
+            todo_list.reverse();
         }
         _ => {}
     }
