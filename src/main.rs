@@ -53,8 +53,8 @@ enum SubCommand {
 struct Add {
     name: String,
     description: String,
-    due_date: String,
     category: String,
+    due_date: String,
     status: String,
 }
 
@@ -149,7 +149,7 @@ fn main() {
     // println!("Path: {:?}", args.path);
 
     // let args = Find::parse();
-    todo_list.print_entries(&[NAME, CATEGORY, DUE_DATE, STATUS, DESCRIPTION]);
+    todo_list.print_entries(&[NAME, DESCRIPTION, CATEGORY, DUE_DATE, STATUS]);
 
     persist(&todo_list);
 }
