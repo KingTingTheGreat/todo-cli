@@ -1,6 +1,7 @@
 use crate::entry::*;
 use serde::{Deserialize, Serialize};
 use std::cmp::max;
+use std::io::Read;
 use std::fs::OpenOptions;
 
 #[derive(Debug)]
@@ -41,10 +42,21 @@ impl TodoList {
             .create(true) // Create the file if it doesn't exist
             .open(file_name)
             .expect("Failed to open file");
-        // let file = std::fs::File::open(file_name).create(file_name).expect("Failed to open file");
-        let reader = std::io::BufReader::new(file);
-        let entries: Vec<Entry> = serde_json::from_reader(reader).unwrap();
-        TodoList { entries }
+        let mut reader = std::io::BufReader::new(file);
+        let mut content = String::new();
+        match reader.read_to_string(&mut content) {
+            Ok(0) => {
+                let entries: Vec<Entry> = serde_json::from_str("[]").unwrap();
+                return TodoList{ entries };
+            }
+            Ok(_) => {
+                let entries: Vec<Entry> = serde_json::from_str(&content).unwrap();
+                return TodoList { entries }
+            }
+            Err(_) => {
+                return TodoList::new();
+            }
+        }
     }
 
     pub fn to_file(&self, file_name: &str) {
