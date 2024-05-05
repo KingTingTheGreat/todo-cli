@@ -111,7 +111,7 @@ fn main() {
         //     }
         // }
         Some(SubCommand::Remove(remove)) => {
-            todo_list.remove_entry(remove.id);
+            todo_list.remove_entry(remove.id - 1);
         }
         None => {
             todo_list.print_entries(&[NAME, CATEGORY, DUE_DATE, STATUS, DESCRIPTION]);

@@ -88,6 +88,9 @@ impl TodoList {
         self.entries.extend(entries);
     }
 
+    /*
+    * removes entry at index
+    */
     pub fn remove_entry(&mut self, index: usize) {
         self.entries.remove(index);
     }
