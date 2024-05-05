@@ -11,3 +11,16 @@ colors:
     status: status color
     priority: white/default or custom
     cost: dark green
+
+
+DEFAULTS
+name: must be provided
+description: ""
+date_added: current date
+due_date: must be provided 
+    can be provided as date
+    can be provided as today + x days
+category: ""
+status: NotStarted
+priority: 1
+cost: 0.0
