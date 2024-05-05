@@ -74,6 +74,15 @@ impl Date {
         Ok(Date { year, month, day })
     }
 
+    pub fn from_string(datestring: &str) -> Date {
+        let parts = datestring.trim().split("-").collect::<Vec<&str>>();
+        let year = parts[0].parse::<u16>().unwrap();
+        let month = parts[1].parse::<u8>().unwrap();
+        let day = parts[2].parse::<u8>().unwrap();
+
+        return Date::new(year, month, day).unwrap();
+    }
+
     pub fn now() -> Date {
         let current = Local::now();
 

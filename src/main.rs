@@ -95,7 +95,7 @@ fn main() {
     let args = Args::parse();
     match args.subcmd {
         Some(SubCommand::Add(add)) => {
-            let due_date = Date::now().add_days(7);
+            let due_date = Date::from_string(&add.due_date);
             let status = Status::from_string(&add.status);
             let entry = Entry::new(add.name, add.description, due_date, add.category, status);
             todo_list.add_entry(entry);
