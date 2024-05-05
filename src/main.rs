@@ -4,6 +4,7 @@ mod entry;
 mod status;
 mod todo_list;
 
+use crate::todo_list::SortType::*;
 use clap::Parser;
 use date::Date;
 use entry::*;
@@ -44,6 +45,7 @@ enum SubCommand {
     Add(Add),
     Update(Update),
     Remove(Remove),
+    Sort(Sort),
 }
 
 #[derive(Parser, Debug)]
@@ -68,6 +70,11 @@ struct Update {
 #[derive(Parser, Debug)]
 struct Remove {
     id: usize,
+}
+
+#[derive(Parser, Debug)]
+struct Sort {
+    attr: String,
 }
 
 // #[derive(Parser)]
@@ -113,8 +120,22 @@ fn main() {
         Some(SubCommand::Remove(remove)) => {
             todo_list.remove_entry(remove.id - 1);
         }
-        None => {
-            todo_list.print_entries(&[NAME, CATEGORY, DUE_DATE, STATUS, DESCRIPTION]);
+        Some(SubCommand::Sort(sort)) => {
+            let lower_attr = sort.attr.to_lowercase();
+            let trim_attr = lower_attr.trim();
+            if ["name", "n"].contains(&trim_attr) {
+                todo_list.sort(Name);
+            } else if ["date added", "date-added", "da"].contains(&trim_attr) {
+                todo_list.sort(DateAdded);
+            } else if ["due date", "due-date", "dd"].contains(&trim_attr) {
+                todo_list.sort(DueDate);
+            } else if ["category", "c"].contains(&trim_attr) {
+                todo_list.sort(Category);
+            } else if ["status", "s"].contains(&trim_attr) {
+                todo_list.sort(Status);
+            } else {
+                println!("Invalid sort type")
+            }
         }
         _ => {}
     }
@@ -124,6 +145,7 @@ fn main() {
     // println!("Path: {:?}", args.path);
 
     // let args = Find::parse();
+    todo_list.print_entries(&[NAME, CATEGORY, DUE_DATE, STATUS, DESCRIPTION]);
 
     persist(&todo_list);
 }
