@@ -52,9 +52,13 @@ enum SubCommand {
 #[derive(Parser, Debug)]
 struct Add {
     name: String,
+    #[clap(short, long, default_value_t = String::new())]
     description: String,
+    #[clap(short, long, default_value_t = String::new())]
     category: String,
+    #[clap(short='t', long, default_value_t = Date::now().add_days(7).to_string())]
     due_date: String,
+    #[clap(short, long, default_value_t = Status::NotStarted.to_string())]
     status: String,
 }
 
@@ -152,4 +156,10 @@ fn main() {
     todo_list.print_entries(&[NAME, DESCRIPTION, CATEGORY, DUE_DATE, STATUS]);
 
     persist(&todo_list);
+
+    let x = Date::now();
+    println!("{}", x.to_string());
+
+    let y = Status::NotStarted;
+    println!("{}", y.to_string());
 }
