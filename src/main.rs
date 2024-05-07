@@ -22,24 +22,6 @@ fn persist(todo_list: &TodoList) {
     todo_list.to_file(ENTRIES_FILENAME);
 }
 
-// #[derive(Parser, Default, Debug)]
-// struct Arguments {
-//     #[clap(short, long, default_value_t = false)]
-//     /// if areas.csv to download
-//     areas: bool,
-//     #[clap(short, long, default_value_t = false)]
-//     /// if markers.csv to download
-//     markers: bool,
-//     #[clap(short, long, default_value_t = false)]
-//     /// if tracks.csv to download
-//     tracks: bool,
-//     #[clap(short, long)]
-//     #[arg(short, long, default_value_t = 1)]
-//     count: u8,
-//     /// path to file of GPS tracks to download
-//     gpx_list_file: Option<String>,
-// }
-
 #[derive(Parser, Debug)]
 enum SubCommand {
     Add(Add),
@@ -81,11 +63,6 @@ struct Remove {
 struct Sort {
     attr: String,
 }
-
-// #[derive(Parser)]
-// struct Find {
-//     pattern: String,
-// }
 
 #[derive(Parser, Default, Debug)]
 struct Args {
@@ -148,18 +125,7 @@ fn main() {
         _ => {}
     }
 
-    // let args = Cli::parse();
-    // println!("Pattern: {}", args.pattern);
-    // println!("Path: {:?}", args.path);
-
-    // let args = Find::parse();
     todo_list.print_entries(&[NAME, DESCRIPTION, CATEGORY, DUE_DATE, STATUS]);
 
     persist(&todo_list);
-
-    let x = Date::now();
-    println!("{}", x.to_string());
-
-    let y = Status::NotStarted;
-    println!("{}", y.to_string());
 }
