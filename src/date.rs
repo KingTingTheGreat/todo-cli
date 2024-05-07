@@ -74,6 +74,10 @@ impl Date {
         Ok(Date { year, month, day })
     }
 
+    pub fn to_string(&self) -> String {
+        return format!("{}-{}-{}", self.year.to_string(), self.month.to_string(), self.day.to_string());
+    }
+
     pub fn from_string(datestring: &str) -> Date {
         let parts = datestring.trim().split("-").collect::<Vec<&str>>();
         let year = parts[0].parse::<u16>().unwrap();
