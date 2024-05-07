@@ -18,7 +18,7 @@ impl Status {
             return Status::Done;
         } else if ["in progress", "in-progress"].contains(&trim_status) {
             return Status::InProgress;
-        } else if ["no started", "not-started"].contains(&trim_status) {
+        } else if ["not started", "not-started"].contains(&trim_status) {
             return Status::NotStarted;
         }
         panic!("Invalid status")
